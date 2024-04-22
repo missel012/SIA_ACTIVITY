@@ -15,8 +15,10 @@ Class UserController extends Controller {
     }
     public function getUsers(){
         $users = User::all();
-        return response()->json($users, 200);
+       
+        return response::json($users, 200);
     }
+    
 
     public function index(){
         $users = User::all();
@@ -35,11 +37,17 @@ Class UserController extends Controller {
        Response::HTTP_CREATED);
     }
 
-    public function show($id){
-        $user = User::findOrFail($id);
+    public function show($id)
+    {
+    //$user = User::findOrFail($id);
+    $user = User::where('id', $id)->first();
+    if ($user){
         return $this->successResponse($user);
     }
-
+    {
+        return $this->errorResponse('User ID Does Not Exists', Response::HTTP_NOT_FOUND);
+    }
+    }
     public function update(Request $request,$id)
     {
         $rules = [
@@ -69,4 +77,7 @@ Class UserController extends Controller {
         $user->delete();
         return $this->successResponse($user);
     }
+
+
+
 }
